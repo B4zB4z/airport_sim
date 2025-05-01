@@ -7,30 +7,30 @@ class Airport:
     def __init__(self):
         self.landing_heap = MaxHeap()  # Priority queue for landing planes
         self.takeoff_queue = []  # Planes on the ground waiting to take off
-        self.planes_in_air = {}  # Tracks planes in the air (in the landing queue)
-        self.planes_on_ground = {}  # Tracks planes on the ground (waiting for takeoff)
+        self.planes_in_air = {}  # Tracks planes in the air
+        self.planes_on_ground = {}  # Tracks planes on the ground
         self.plane_id_counter = 0
         self.random_events = RandomEvents()
 
-        # Initialize the airport with 10 planes on the ground and 5 planes in the air wanting to land
+        # Initialize the airport with 10 planes on the ground and 5 planes in the air
         self.initialize_airport()
 
     def initialize_airport(self):
-        # Add 10 planes on the ground
-        for _ in range(10):
+        # Adds 10 planes on the ground
+        for i in range(10):
             self.add_plane_on_ground()
         
-        # Add 5 planes in the air, requesting to land
-        for _ in range(5):
+        # Adds 5 planes in the air, requesting to land
+        for i in range(5):
             self.add_plane_in_air()
 
     def add_plane_in_air(self):
-        # Adds a plane to the landing queue (in the air)
+        # Adds a plane to the landing queue
         self.plane_id_counter += 1
         plane_id = f"Plane{self.plane_id_counter}"
 
         priority = 5  # Default priority for landing planes
-        event = self.random_events.random_event()
+        event = self.random_events.random_event() # Adds a random event to the plane on the air
 
         if event == "emergency":
             priority += 2
@@ -42,13 +42,14 @@ class Airport:
             print(f"[NEW] {plane_id} is requesting a landing!")
 
         self.planes_in_air[plane_id] = priority
-        self.landing_heap.add((priority, plane_id))  # Add plane to heap with priority
+        self.landing_heap.add((priority, plane_id))  # Add the plane to the heap with the new priority
 
     def add_plane_on_ground(self):
-        # Adds a plane to the takeoff queue (on the ground)
+        # Adds a plane to the takeoff queue
         self.plane_id_counter += 1
         plane_id = f"Plane{self.plane_id_counter}"
-        self.planes_on_ground[plane_id] = 1  # Ground planes have a fixed low priority
+        self.planes_on_ground[plane_id] = 1  # Default priority
+        
         self.takeoff_queue.append(plane_id)
         print(f"[NEW] {plane_id} is requesting takeoff.")
 
@@ -72,15 +73,15 @@ class Airport:
         for step in range(steps):
             print(f"\n--- Step {step+1} ---")
             
-            # Randomly decide whether to add a new plane to the landing queue (no new planes on the ground)
-            action = random.choice(["new_plane_in_air", "nothing"])  # No more planes are added to the ground automatically
+            # Randomly decide whether to add a new plane to the landing queue
+            action = random.choice(["new_plane_in_air", "nothing"])
             
             if action == "new_plane_in_air":
-                self.add_plane_in_air()  # Adds a random plane to the air
+                self.add_plane_in_air()
             else:
                 print("[EVENT] No new planes this step.")
             
             # Allow planes to land or take off based on priority
             self.allow_landing_or_takeoff()
             
-            time.sleep(delay)  # Optional delay between steps for simulation effect
+            time.sleep(delay)  # Optional delay between steps

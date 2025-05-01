@@ -6,6 +6,16 @@ class MaxHeap:
         self.data.append(value)
         self.heapify_up()
     
+    def heapify_up(self):
+        pos = len(self.data) -1
+        while pos > 0:
+            parent = self.get_parent(pos)
+            if self.data[pos] > self.data[parent]:
+                self.data[pos], self.data[parent] = self.data[parent], self.data[pos]
+                pos = parent
+            else:
+                break
+    
     def is_empty(self):
         return len(self.data) == 0
     
@@ -17,31 +27,10 @@ class MaxHeap:
 
     def get_right_child(self, pos):
         return pos * 2 + 2
-     
-
-    def heapify_up(self):
-        pos = len(self.data) -1
-        while pos > 0:
-            parent = self.get_parent(pos)
-            if self.data[pos] > self.data[parent]:
-                self.data[pos], self.data[parent] = self.data[parent], self.data[pos]
-                pos = parent
-            else:
-                break
-    
-
-    def get_max(self):
-        if self.is_empty():
-            return None
-        max = self.data[0]
-        self.data[0] = self.data[-1]
-        self.data.pop(-1)
-        self.heapify_down()
-        return max
-    
+   
     def in_heap_list(self, pos):
         return pos < len(self.data)
-    
+
     def get_max_child(self, pos):
         left = self.get_left_child(pos)
         right = self.get_right_child(pos)
@@ -55,7 +44,14 @@ class MaxHeap:
         else:
             return None
     
-
+    def get_max(self):
+        if self.is_empty():
+            return None
+        max = self.data[0]
+        self.data[0] = self.data[-1]
+        self.data.pop(-1)
+        self.heapify_down()
+        return max
 
     def heapify_down(self):
         pos = 0
